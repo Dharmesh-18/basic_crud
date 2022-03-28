@@ -40,10 +40,17 @@ public class StudentService {
         if(optionalStudent.isPresent()){
             return new ResponseEntity<>(optionalStudent.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND) ;
+        throw new RuntimeException("Student with id "+ id + " not present.");
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND) ;
     }
 
     public void deleteById(Long id) {
-        studentRepository.deleteById(id);
+        boolean exists = studentRepository.existsById(id);
+        if(!exists){
+            throw new RuntimeException("Student with id " + id + " does not exists.");
+        }
+        else{
+            studentRepository.deleteById(id);
+        }
     }
 }
